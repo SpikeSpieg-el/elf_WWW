@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тёмное фэнтези - Игры</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family= রক্ত+Serif:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+  <style>
+    :root {
+        --background: 0 0% 7%; /* Более насыщенный темный фон */
+      --foreground: 240 5% 95%; /* Светлый текст для контраста */
+
+      --card: 240 5% 9%; /* Более выразительный цвет карточек */
+      --card-foreground: 210 20% 98%;
+
+      --popover: 222 47% 13%;
+      --popover-foreground: 210 20% 98%;
+
+      --primary: 259 30% 33%; /* Насыщенный фиолетовый, как акцент темного фэнтези */
+      --primary-foreground: 240 5% 95%;
+
+      --secondary: 271 18% 52%; /* Более холодный вторичный цвет */
+      --secondary-foreground: 210 20% 98%;
+
+      --muted: 240 5% 15%; /* Более глубокий приглушенный цвет */
+      --muted-foreground: 210 20% 60%;
+
+      --accent: 281 32% 77%; /* Мягкий акцентный цвет */
+      --accent-foreground: 222 47% 11%;
+
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 20% 98%;
+
+      --border: 217 19% 24%; /* Более темная граница */
+      --input: 222 47% 20%;
+      --ring: 258 70% 50%; /* Кольцо фокуса в акцентном цвете */
+
+      --radius: 0.5rem; /* Слегка уменьшенный радиус */
+    }
+
+    .font-rouget-serif {
+      font-family: ' রক্ত Serif', serif; /* Более готический шрифт */
+    }
+
+    .gradient-bg {
+        background: radial-gradient(ellipse at top left,  hsl(var(--primary)/0.3) 20%, hsl(var(--background)) 70%); /* Изменен градиент для большей глубины */
+    }
+
+    .gradient-bg::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(ellipse at bottom right, hsl(var(--secondary)/0.2) 20%, transparent 70%); /* Второй градиент для контраста */
+        pointer-events: none;
+    }
+
+    .nav-shadow {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1); /* Более выраженная тень навигации */
+    }
+
+    .card-border {
+        border: 1px solid hsl(var(--border));
+    }
+
+    .card-hover-shadow {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.15); /* Усиленная тень при наведении */
+        transform: translateY(-3px); /* Небольшой эффект подъема карточки */
+    }
+
+    .hero-overlay {
+        background-color: rgba(0, 0, 0, 0.65); /* Более темное наложение для hero */
+    }
+
+    .section-title {
+        position: relative;
+        padding-bottom: 1rem; /* Добавлено пространство под заголовком */
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        display: block;
+        width: 50px;
+        height: 4px; /* Утолщенная линия */
+        background-color: hsl(var(--primary));
+        border-radius: 2px; /* Скругление линии */
+    }
+
+    .footer-link:hover {
+        text-decoration: underline;
+        color: hsl(var(--accent));
+    }
+
+    .primary-btn {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out; /* Добавлена анимация цвета фона */
+    }
+
+    .primary-btn:hover {
+        transform: scale(1.07); /* Увеличение масштаба при наведении */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Более выразительная тень */
+        background-color: hsl(var(--primary)/0.95); /* Небольшое осветление фона */
+    }
+
+    .focus-ring {
+        outline: none;
+    box-shadow: 5px 3px 0px 0px hsl(258deg 73.47% 10.5% / 74%);
+    transition: box-shadow 0.3s ease;
+    }
+
+    .focus-ring:focus {
+        box-shadow: 0 0 0 3px hsl(var(--ring)); /* Усиленное кольцо при фокусе */
+    }
+
+    /* Анимации Animate.css */
+    .animate-faster {
+        animation-duration: 0.8s; /* Ускоренные анимации */
+    }
+    .animate-delay-slower {
+        animation-delay: 0.4s; /* Задержка для каскадных анимаций */
+    }
+
+    /* Дополнительные стили для улучшения UX */
+    .hover-card:hover .card-overlay { /* Показ оверлея при наведении на карточку */
+        opacity: 1;
+    }
+
+    .card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* Затемнение для оверлея */
+        color: hsl(var(--foreground));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0; /* Изначально скрыт */
+        transition: opacity 0.3s ease-in-out;
+        border-radius: inherit; /* Наследование скругления от родительской карточки */
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .card-overlay h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-overlay p {
+        font-size: 1rem;
+        color: hsl(var(--accent)); /* Акцентный цвет для описания */
+    }
+
+    .world-card-icon {
+        margin-bottom: 1rem;
+        font-size: 2.5rem; /* Увеличенный размер иконок миров */
+        color: hsl(var(--primary));
+    }
+
+    .world-card-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .world-card-description {
+        color: hsl(var(--muted-foreground));
+        line-height: 1.6;
+    }
+
+    /* Улучшения для Hero секции */
+    #hero {
+        background-attachment: fixed; /* Эффект параллакса */
+        position: relative; /* Для позиционирования псевдоэлемента */
+    }
+
+    #hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3); /* Дополнительное затемнение для контраста текста */
+        z-index: 1; /* Под текстом */
+    }
+
+    #hero .container {
+        position: relative; /* Чтобы контент был поверх псевдоэлемента */
+        z-index: 2;
+    }
+
+    #hero h1 {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Тень для заголовка */
+    }
+
+    /* Улучшения для карточек галереи */
+    .hover-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Плавная анимация */
+    }
+
+    .hover-card:hover {
+        transform: scale(1.05); /* Небольшое увеличение масштаба при наведении */
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* Более выразительная тень при наведении */
+    }
+
+    .nav-links a {
+        transition: color 0.3s ease; /* Плавное изменение цвета ссылок навигации */
+    }
+
+    .nav-links a:hover {
+        color: hsl(var(--accent)); /* Цвет при наведении */
+    }
+
+    /* Стили для модального окна */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: hsl(var(--card));
+      padding: 2rem;
+      border-radius: var(--radius);
+      max-width: 800px;
+      width: 90%;
+      position: relative;
+      margin: 1rem; /* Добавлен отступ для мобильных устройств */
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      color: hsl(var(--foreground));
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: hsl(var(--primary));
+    }
+
+    .modal-image {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      max-height: 60vh; /* Ограничение высоты изображения */
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    .modal-description {
+      margin-top: 0.5rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    /* Адаптивные стили для модального окна */
+    @media (min-width: 768px) {
+      .modal-content {
+        width: 70%; /* Уменьшаем ширину на больших экранах */
+        padding: 3rem; /* Увеличиваем отступы */
+      }
+
+      .modal-image {
+        max-height: 70vh; /* Увеличиваем максимальную высоту изображения */
+      }
+
+      .modal-title {
+        font-size: 2rem; /* Увеличиваем размер заголовка */
+      }
+
+      .modal-description {
+        font-size: 1.2rem; /* Увеличиваем размер текста описания */
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .modal-content {
+        width: 50%; /* Еще меньше ширина на очень больших экранах */
+        padding: 4rem; /* Еще больше отступов */
+      }
+
+      .modal-image {
+        max-height: 80vh; /* Максимальная высота изображения */
+      }
+    }
+
+    /* Анимация логотипа */
+    @keyframes glow {
+      0% {
+        filter: drop-shadow(0 0 5px hsl(var(--primary)));
+      }
+      50% {
+        filter: drop-shadow(0 0 15px hsl(var(--primary)));
+      }
+      100% {
+        filter: drop-shadow(0 0 5px hsl(var(--primary)));
+      }
+    }
+
+    .logo-svg {
+      animation: glow 2s infinite;
+      color: hsl(var(--primary)); /* Цвет логотипа */
+    }
+
+  </style>
+</head>
+<body class="bg-[hsl(var(--background))] text-[hsl(var(--foreground))] font-inter">
+  <div class="gradient-bg relative overflow-hidden">
+    <!-- Навигация -->
+    <nav class="bg-[hsl(var(--card)/0.9)] backdrop-blur-md py-4 fixed top-0 left-0 right-0 z-50 nav-shadow animate__animated animate__fadeInDown animate__faster">
+      <div class="container mx-auto px-6 md:px-8 lg:px-12 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <svg class="w-10 h-10 md:w-12 md:h-12 logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L16 8L22 9L17 14L12 18L7 14L2 9L8 8L12 2Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 6L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 6L9 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Внутренняя звёздочка без заливки и с другим цветом -->
+            <path d="M12 8L14 11L18 12L15 15L16 19L12 17L8 19L9 15L6 12L10 11L12 8Z" fill="none" stroke="#C792EA" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="text-xl md:text-2xl font-rouget-serif font-bold tracking-tight">Elf Roug</div>
+        </div>
+        <div class="hidden md:flex space-x-6 lg:space-x-8 text-sm md:text-base">
+          <a href="#hero" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors">Главная</a>
+          <a href="#gallery" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors">Галерея</a>
+          <a href="#worlds" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors">Миры</a>
+          <a href="#about" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors">О нас</a>
+        </div>
+        <!-- Мобильное меню (бургер) -->
+        <div class="md:hidden">
+          <button id="mobile-menu-button" class="focus:outline-none focus-ring">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Мобильное меню (скрытое) -->
+      <div class="md:hidden hidden" id="mobile-menu">
+        <div class="px-4 py-3 flex flex-col space-y-3">
+          <a href="#hero" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors block">Главная</a>
+          <a href="#gallery" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors block">Галерея</a>
+          <a href="#worlds" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors block">Миры</a>
+          <a href="#about" class="hover:text-[hsl(var(--primary))] focus:outline-none focus-ring rounded-md px-3 py-2 transition-colors block">О нас</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="pt-16">
+      <!-- Hero секция -->
+      <section id="hero" class="bg-[url('scr/1V8kOz96rxGCq6ZEr5vsF_be74cc513e8d48aaa792d87b4131f81f.png')] bg-cover bg-center py-36 md:py-60 relative overflow-hidden">
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="container mx-auto px-6 md:px-8 lg:px-12 text-center relative z-10 pt-16 md:pt-24">
+          <h1 class="font-rouget-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-8 animate__animated animate__fadeInUp animate__delay-slower leading-tight">Окунитесь в Готические Миры Тьмы</h1>
+          <p class="text-base md:text-xl lg:text-2xl max-w-3xl mx-auto animate__animated animate__fadeInUp animate__delay-normal text-gray-300 leading-relaxed">
+            Откройте для себя вселенную, где тьма и магия правят, а эльфийские девы в готических нарядах хранят древние тайны. Исследуйте мрачные леса и величественные замки.
+          </p>
+          <div class="mt-10 md:mt-14 animate__animated animate__fadeInUp animate__delay-faster">
+            <a href="#gallery" class="inline-block primary-btn bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] px-6 py-3 md:px-8 md:py-4 rounded-lg hover:bg-[hsl(var(--primary)/0.9)] focus:outline-none focus-ring transition-colors text-sm md:text-base font-semibold">
+              Исследовать Галерею
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Галерея карт -->
+      <section id="gallery" class="container mx-auto px-6 md:px-8 lg:px-12 py-20 md:py-28">
+        <h2 class="font-rouget-serif text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-16 section-title animate__animated animate__fadeIn animate__faster">Галерея карт</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
+          <!-- Карта 1 -->
+          <div class="bg-[hsl(var(--card))] rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-faster hover-card relative overflow-hidden">
+            <img src="scr/xZ54SxwU59akc_q5Xfhrz_ce2e0292c9cd47cf87b85ab89fa4dd1d.png"
+                 alt="Эльфийка-воительница"
+                 class="w-full h-64 object-cover rounded-t-xl">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-4">Эльфийка-воительница</h3>
+              <p class="text-[hsl(var(--muted-foreground))] text-sm">Сила: 8 | Защита: 5 | Магия: 3</p>
+            </div>
+            <div class="card-overlay">
+              <h4 class="mb-2">Эльфийка-воительница</h4>
+              <p>Мощный воин, готовый к любым испытаниям. Её клинок не знает пощады.</p>
+              <a href="#" class="inline-block mt-4 primary-btn bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] px-4 py-2 rounded-md hover:bg-[hsl(var(--primary)/0.9)] focus:outline-none focus-ring transition-colors text-sm font-semibold">Подробнее</a>
+            </div>
+          </div>
+
+          <!-- Карта 2 -->
+          <div class="bg-[hsl(var(--card))] rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-normal hover-card relative overflow-hidden">
+            <img src="scr/Wy2hSX-Ma1CcKBN37sQaz_b596b1b76d1549a2980cafbb0a65df12.png"
+                 alt="Лесная провидица"
+                 class="w-full h-64 object-cover rounded-t-xl">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-4">Лесная провидица</h3>
+              <p class="text-[hsl(var(--muted-foreground))] text-sm">Сила: 3 | Защита: 4 | Магия: 9</p>
+            </div>
+            <div class="card-overlay">
+              <h4 class="mb-2">Лесная провидица</h4>
+              <p>Мудрая и загадочная, она видит сквозь время и пространство, направляя путников.</p>
+              <a href="#" class="inline-block mt-4 primary-btn bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] px-4 py-2 rounded-md hover:bg-[hsl(var(--primary)/0.9)] focus:outline-none focus-ring transition-colors text-sm font-semibold">Подробнее</a>
+            </div>
+          </div>
+
+          <!-- Карта 3 -->
+          <div class="bg-[hsl(var(--card))] rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-slower hover-card relative overflow-hidden">
+            <img src="scr/sTjfdlW_bGOQNnOE8e_xU_bde6eeb90a5d4544bc21d2569ff8b5e2.png"
+                 alt="Стрелок теней"
+                 class="w-full h-64 object-cover rounded-t-xl">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-4">Стрелок теней</h3>
+              <p class="text-[hsl(var(--muted-foreground))] text-sm">Сила: 6 | Защита: 3 | Магия: 5</p>
+            </div>
+            <div class="card-overlay">
+              <h4 class="mb-2">Стрелок теней</h4>
+              <p>Неуловимый и смертоносный, его стрелы всегда находят цель, скрываясь в тени.</p>
+              <a href="#" class="inline-block mt-4 primary-btn bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] px-4 py-2 rounded-md hover:bg-[hsl(var(--primary)/0.9)] focus:outline-none focus-ring transition-colors text-sm font-semibold">Подробнее</a>
+            </div>
+          </div>
+
+          <!-- Карта 4 -->
+          <div class="bg-[hsl(var(--card))] rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-extra-slower hover-card relative overflow-hidden">
+            <img src="scr/gK1rFVyrvyy7un7BioxTE_c207256590ae4dbda16504e6cef74673.png"
+                 alt="Маг древних рун"
+                 class="w-full h-64 object-cover rounded-t-xl">
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-4">Маг древних рун</h3>
+              <p class="text-[hsl(var(--muted-foreground))] text-sm">Сила: 2 | Защита: 3 | Магия: 10</p>
+            </div>
+            <div class="card-overlay">
+              <h4 class="mb-2">Маг древних рун</h4>
+              <p>Обладатель могущественных рун, способный управлять стихиями и изменять реальность.</p>
+              <a href="#" class="inline-block mt-4 primary-btn bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] px-4 py-2 rounded-md hover:bg-[hsl(var(--primary)/0.9)] focus:outline-none focus-ring transition-colors text-sm font-semibold">Подробнее</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Приветственная секция -->
+      <section id="about" class="container mx-auto px-6 md:px-8 lg:px-12 py-20 md:py-28">
+        <div class="text-center max-w-4xl mx-auto">
+          <h2 class="font-rouget-serif text-3xl md:text-4xl lg:text-5xl font-bold mb-12 section-title animate__animated animate__fadeIn animate__faster">Добро пожаловать в Тёмные Миры Elf Roug</h2>
+          <p class="text-base md:text-lg lg:text-xl text-[hsl(var(--muted-foreground))] animate__animated animate__fadeInUp animate__delay-normal leading-relaxed">
+            Здесь вы найдете уникальные миры, полные тайн, магии и опасностей. Исследуйте готические пейзажи, встречайте загадочных персонажей и погрузитесь в истории, где тьма и свет переплетаются в вечном танце.  Наши игры предлагают вам не просто развлечение, а путешествие в иные реальности, где каждое решение имеет значение.
+          </p>
+          <div class="mt-10 md:mt-14 animate__animated animate__fadeInUp animate__delay-slower">
+            <a href="#demo" class="inline-block primary-btn bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] px-6 py-3 md:px-8 md:py-4 rounded-xl hover:bg-[hsl(var(--primary)/0.9)] focus:outline-none focus-ring transition-colors animate__animated animate__pulse animate__infinite animate__slow text-sm md:text-base font-semibold">
+              Играть в демо рогалик
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Секция посещённых миров -->
+      <section id="worlds" class="container mx-auto px-6 md:px-8 lg:px-12 py-20 md:py-28">
+        <h2 class="font-rouget-serif text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-16 section-title animate__animated animate__fadeIn animate__faster">Посещённые миры</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
+          <!-- Блок 1 -->
+          <div class="bg-[hsl(var(--card))] p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-faster text-center">
+            <div class="world-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand-sparkles inline-block">
+                <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"></path>
+                <path d="m14 7 3 3"></path>
+                <path d="M5 6v4"></path>
+                <path d="M19 14v4"></path>
+                <path d="M10 2v2"></path>
+                <path d="M7 8H3"></path>
+                <path d="M21 16h-4"></path>
+                <path d="M11 3H9"></path>
+              </svg>
+            </div>
+            <h3 class="world-card-title">Лес Вечной Тьмы</h3>
+            <p class="world-card-description">Готический лес, где эльфийки охраняют древние секреты. Тайны и опасности на каждом шагу.</p>
+          </div>
+
+          <!-- Блок 2 -->
+          <div class="bg-[hsl(var(--card))] p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-normal text-center">
+            <div class="world-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book inline-block">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"></path>
+              </svg>
+            </div>
+            <h3 class="world-card-title">Замок Падших Звёзд</h3>
+            <p class="world-card-description">Мрачный замок, где тьма поглотила свет. Исследуйте залы и раскройте проклятие.</p>
+          </div>
+
+          <!-- Блок 3 -->
+          <div class="bg-[hsl(var(--card))] p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-slower text-center">
+            <div class="world-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-castle inline-block">
+                <path d="M22 20v-9H2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2Z"></path>
+                <path d="M18 11V4H6v7"></path>
+                <path d="M15 22v-4a3 3 0 0 0-3-3v0a3 3 0 0 0-3 3v4"></path>
+                <path d="M22 11V9"></path>
+                <path d="M2 11V9"></path>
+                <path d="M6 4V2"></path>
+                <path d="M18 4V2"></path>
+                <path d="M10 4V2"></path>
+                <path d="M14 4V2"></path>
+              </svg>
+            </div>
+            <h3 class="world-card-title">Бездна Забвения</h3>
+            <p class="world-card-description">Пропасть, ведущая в неизведанные глубины. Выживете ли вы в её мрачных недрах?</p>
+          </div>
+
+          <!-- Блок 4 -->
+          <div class="bg-[hsl(var(--card))] p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-extra-slower text-center">
+            <div class="world-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-temple-buddhist inline-block">
+                <path d="M21 12a9 9 0 0 0-18 0v6h18v-6Z"></path>
+                <path d="M3 12a9 9 0 0 1 18 0v6H3v-6Z"></path>
+                <path d="M12 3v18"></path>
+                <path d="M7.5 3 5 21"></path>
+                <path d="M16.5 3 19 21"></path>
+              </svg>
+            </div>
+            <h3 class="world-card-title">Храм Лунной Тени</h3>
+            <p class="world-card-description">Древний храм, где поклоняются тёмным силам. Раскройте секреты зловещих ритуалов.</p>
+          </div>
+
+          <!-- Блок 5 -->
+          <div class="bg-[hsl(var(--card))] p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-faster text-center">
+            <div class="world-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-rain inline-block">
+                <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+                <path d="M16 14v6"></path>
+                <path d="M8 14v6"></path>
+                <path d="M12 16v6"></path>
+              </svg>
+            </div>
+            <h3 class="world-card-title">Город Вечного Дождя</h3>
+            <p class="world-card-description">Город, где дождь не прекращается. Погрузитесь в меланхоличную атмосферу.</p>
+          </div>
+
+          <!-- Блок 6 -->
+          <div class="bg-[hsl(var(--card))] p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 card-border animate__animated animate__fadeInUp animate__delay-normal text-center">
+            <div class="world-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon-star inline-block">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                <path d="M19 3v4"></path>
+                <path d="M21 5h-4"></path>
+              </svg>
+            </div>
+            <h3 class="world-card-title">Лунария</h3>
+            <p class="world-card-description">Мир, где звёзды и луна управляют судьбами. Откройте тайны ночного неба.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Футер -->
+    <footer class="bg-[hsl(var(--card))] mt-28 py-16">
+      <div class="container mx-auto px-6 md:px-8 lg:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+          <!-- О сайте -->
+          <div>
+            <h3 class="font-rouget-serif text-xl font-bold mb-6">О сайте</h3>
+            <p class="text-[hsl(var(--muted-foreground))] leading-relaxed">
+              Elf Roug - ваш портал в захватывающие миры темного фэнтези. Мы создаем уникальные истории и игровые вселенные для исследования. Погрузитесь в атмосферу готики и магии.
+            </p>
+          </div>
+
+          <!-- Навигация -->
+          <div>
+            <h3 class="font-rouget-serif text-xl font-bold mb-6">Навигация</h3>
+            <ul class="space-y-4">
+              <li><a href="#hero" class="hover:text-[hsl(var(--primary))] footer-link">Главная</a></li>
+              <li><a href="#gallery" class="hover:text-[hsl(var(--primary))] footer-link">Галерея</a></li>
+              <li><a href="#worlds" class="hover:text-[hsl(var(--primary))] footer-link">Миры</a></li>
+              <li><a href="#about" class="hover:text-[hsl(var(--primary))] footer-link">О нас</a></li>
+            </ul>
+          </div>
+
+          <!-- Контакты -->
+          <div>
+            <h3 class="font-rouget-serif text-xl font-bold mb-6">Контакты</h3>
+            <ul class="text-[hsl(var(--muted-foreground))] space-y-4">
+              <li>Email: <a href="mailto:info@elfroug.com" class="hover:text-[hsl(var(--primary))] footer-link">info@elfroug.com</a></li>
+              <li>Телефон: +7 (999) 123-45-67</li>
+              <li class="flex space-x-6">
+                <a href="#" class="hover:text-[hsl(var(--primary))] footer-link" aria-label="Facebook">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                  </svg>
+                </a>
+                <a href="#" class="hover:text-[hsl(var(--primary))] footer-link" aria-label="Twitter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                  </svg>
+                </a>
+                <a href="#" class="hover:text-[hsl(var(--primary))] footer-link" aria-label="Instagram">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Копирайт -->
+        <div class="border-t border-[hsl(var(--border))] mt-12 pt-12 text-center text-[hsl(var(--muted-foreground))]">
+          © 2025 Elf Roug. Все права защищены.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Модальное окно -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" id="modal-close">&times;</span>
+      <img id="modal-image" class="modal-image" src="" alt="">
+      <h3 id="modal-title" class="modal-title"></h3>
+      <p id="modal-description" class="modal-description"></p>
+    </div>
+  </div>
+
+  <script>
+    // Плавная прокрутка
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Мобильное меню
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Обработчик для открытия модального окна
+    document.querySelectorAll('.card-overlay a').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const card = this.closest('.hover-card');
+        const image = card.querySelector('img').src;
+        const title = card.querySelector('h3').textContent;
+        const description = card.querySelector('.card-overlay p').textContent;
+
+        document.getElementById('modal-image').src = image;
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-description').textContent = description;
+        document.getElementById('modal').classList.add('open');
+      });
+    });
+
+    // Закрытие модального окна
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('modal').classList.remove('open');
+    });
+
+    // Закрытие при клике вне модального окна
+    window.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modal')) {
+        document.getElementById('modal').classList.remove('open');
+      }
+    });
+  </script>
+</body>
+</html>
